@@ -1,22 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class wallet extends StatefulWidget {
+class WalletPage extends StatefulWidget {
   @override
-  _RechargePageState createState() => _RechargePageState();
+  _WalletPageState createState() => _WalletPageState();
 }
 
-class _RechargePageState extends State
-{
+class _WalletPageState extends State<WalletPage> {
   double _walletBalance = 0.0;
-  TextEditingController _controller = TextEditingController();
-  int _selectedIndex = 0; // Index of the selected item in the bottom navigation bar
+  TextEditingController _amountController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  int _selectedIndex = 2; // Index of the selected item in the bottom navigation bar
 
   void _onItemTapped(int index) {
     // Handle navigation to different pages based on the selected index
     // You can navigate to different pages or update the UI based on the index
     // For simplicity, I'm just updating the state to change the selected index
-    _selectedIndex = index;
+    setState(() {
+      _selectedIndex = index;
+    });
   }
+
+  Future<void> _updateWallet(String email, double amount) async {
+    final url = Uri.parse('http://127.0.0.1:8000/auth/update-wallet/');
+    final response = await http.put(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email, 'wallet_amount': amount}),
+    );
+
+    if (response.statusCode == 200) {
+      // Handle success
+      final jsonResponse = jsonDecode(response.body);
+ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Success'),
+                              ),
+                            );     } else {
+      // Handle error
+ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Failed'),
+                              ),
+                            );     }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +59,6 @@ class _RechargePageState extends State
             Container(
               margin: EdgeInsets.symmetric(horizontal: 20), // Add margin
               decoration: BoxDecoration(
-                // color: Colors.black, // Set background color to black
                 borderRadius: BorderRadius.circular(10),
               ),
               padding: EdgeInsets.all(20),
@@ -57,19 +85,28 @@ class _RechargePageState extends State
                     child: Column(
                       children: [
                         TextField(
-                          controller: _controller,
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        TextField(
+                          controller: _amountController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            labelText: 'Rs 100',
+                            labelText: 'Amount',
                           ),
                         ),
                         SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: () {
-                            double amount = double.tryParse(_controller.text) ?? 0.0;
-                            _addMoney(amount); // Add amount entered in text field
+                            String email = _emailController.text;
+                            double amount = double.tryParse(_amountController.text) ?? 0.0;
+                            _updateWallet(email, amount); // Update wallet
                           },
-                          child: Text('Back to Home'),
+                          child: Text('Add Money'),
                         ),
                       ],
                     ),
@@ -102,15 +139,16 @@ class _RechargePageState extends State
     );
   }
 
-  void _addMoney(double amount) {
-    setState(() {
-      _walletBalance += amount;
-    });
-  }
-
   @override
   void dispose() {
-    _controller.dispose();
+    _emailController.dispose();
+    _amountController.dispose();
     super.dispose();
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: WalletPage(),
+  ));
 }

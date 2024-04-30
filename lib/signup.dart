@@ -1,11 +1,52 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/material.dart';
 import 'package:iotapp/main.dart';
 
 class SignupPage extends StatelessWidget {
   const SignupPage({super.key});
 
+  Future<void> signUp(BuildContext context, String username, String email,
+      String password) async {
+    final url = Uri.parse('http://0.0.0.0:8000/auth/create/');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': username,
+        'email': email,
+        'password': password,
+        "wallet_amount": 1000.00,
+        "petrol_purchased": 20.00,
+        "diesel_purchased": 10.00,
+        "current_petrol_rate": 2.50,
+        "current_diesel_rate": 2.00
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      if (jsonResponse['id'] == 'success') {
+        // Redirect to login page
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      } else {
+        // Handle other cases, such as error responses
+      }
+    } else {
+      // Handle HTTP error
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    String username = '';
+    String email = '';
+    String password = '';
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -21,7 +62,6 @@ class SignupPage extends StatelessWidget {
                 Column(
                   children: <Widget>[
                     const SizedBox(height: 60.0),
-
                     const Text(
                       "Sign up",
                       style: TextStyle(
@@ -41,6 +81,7 @@ class SignupPage extends StatelessWidget {
                 Column(
                   children: <Widget>[
                     TextField(
+                      onChanged: (value) => username = value,
                       decoration: InputDecoration(
                           hintText: "Username",
                           border: OutlineInputBorder(
@@ -50,10 +91,9 @@ class SignupPage extends StatelessWidget {
                           filled: true,
                           prefixIcon: const Icon(Icons.person)),
                     ),
-
                     const SizedBox(height: 20),
-
                     TextField(
+                      onChanged: (value) => email = value,
                       decoration: InputDecoration(
                           hintText: "Email",
                           border: OutlineInputBorder(
@@ -63,10 +103,9 @@ class SignupPage extends StatelessWidget {
                           filled: true,
                           prefixIcon: const Icon(Icons.email)),
                     ),
-
                     const SizedBox(height: 20),
-
                     TextField(
+                      onChanged: (value) => password = value,
                       decoration: InputDecoration(
                         hintText: "Password",
                         border: OutlineInputBorder(
@@ -78,9 +117,7 @@ class SignupPage extends StatelessWidget {
                       ),
                       obscureText: true,
                     ),
-
                     const SizedBox(height: 20),
-
                     TextField(
                       decoration: InputDecoration(
                         hintText: "Confirm Password",
@@ -96,25 +133,23 @@ class SignupPage extends StatelessWidget {
                   ],
                 ),
                 Container(
-                    padding: const EdgeInsets.only(top: 3, left: 3),
-
-                    child: ElevatedButton(
-                      onPressed: () {
-                      },
-                      child: const Text(
-                        "Sign up",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        shape: const StadiumBorder(),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.purple,
-                      ),
-                    )
+                  padding: const EdgeInsets.only(top: 3, left: 3),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      signUp(context, username, email, password);
+                    },
+                    child: const Text(
+                      "Sign up",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      shape: const StadiumBorder(),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.purple,
+                    ),
+                  ),
                 ),
-
                 const Center(child: Text("Or")),
-
                 Container(
                   height: 45,
                   decoration: BoxDecoration(
@@ -127,7 +162,8 @@ class SignupPage extends StatelessWidget {
                         color: Colors.white.withOpacity(0.5),
                         spreadRadius: 1,
                         blurRadius: 1,
-                        offset: const Offset(0, 1), // changes position of shadow
+                        offset:
+                            const Offset(0, 1), // changes position of shadow
                       ),
                     ],
                   ),
@@ -140,16 +176,16 @@ class SignupPage extends StatelessWidget {
                           height: 30.0,
                           width: 30.0,
                           decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image:   AssetImage('assets/images/login_signup/google.png'),
-                                fit: BoxFit.cover),
-                            shape: BoxShape.circle,
-                          ),
+                              // image: DecorationImage(
+                              // image: AssetImage(
+                              // 'assets/images/login_signup/google.png'),
+                              // fit: BoxFit.cover),
+                              // shape: BoxShape.circle,
+                              ),
                         ),
-
                         const SizedBox(width: 18),
-
-                        const Text("Sign In with Google",
+                        const Text(
+                          "Sign In with Google",
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.purple,
@@ -159,7 +195,6 @@ class SignupPage extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -172,8 +207,10 @@ class SignupPage extends StatelessWidget {
                                 builder: (context) => LoginPage()),
                           );
                         },
-                        child: const Text("Login", style: TextStyle(color: Colors.purple),)
-                    )
+                        child: const Text(
+                          "Login",
+                          style: TextStyle(color: Colors.purple),
+                        ))
                   ],
                 )
               ],
