@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:iotapp/homepage.dart';
 import 'dart:convert';
 
+import 'package:iotapp/main.dart';
+import 'package:iotapp/user.dart';
+import 'package:provider/provider.dart';
+
 class WalletPage extends StatefulWidget {
+// Constructor with username parameter
+
   @override
   _WalletPageState createState() => _WalletPageState();
 }
@@ -11,7 +18,8 @@ class _WalletPageState extends State<WalletPage> {
   double _walletBalance = 0.0;
   TextEditingController _amountController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
-  int _selectedIndex = 2; // Index of the selected item in the bottom navigation bar
+  int _selectedIndex =
+      2; // Index of the selected item in the bottom navigation bar
 
   void _onItemTapped(int index) {
     // Handle navigation to different pages based on the selected index
@@ -23,7 +31,7 @@ class _WalletPageState extends State<WalletPage> {
   }
 
   Future<void> _updateWallet(String email, double amount) async {
-    final url = Uri.parse('http://127.0.0.1:8000/auth/update-wallet/');
+    final url = Uri.parse('http://10.0.2.2:8000/auth/update-wallet/');
     final response = await http.put(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -33,17 +41,23 @@ class _WalletPageState extends State<WalletPage> {
     if (response.statusCode == 200) {
       // Handle success
       final jsonResponse = jsonDecode(response.body);
-ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Success'),
-                              ),
-                            );     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Money Added To Wallet'),
+        ),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } else {
       // Handle error
-ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Failed'),
-                              ),
-                            );     }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed'),
+        ),
+      );
+    }
   }
 
   @override
@@ -103,7 +117,8 @@ ScaffoldMessenger.of(context).showSnackBar(
                         ElevatedButton(
                           onPressed: () {
                             String email = _emailController.text;
-                            double amount = double.tryParse(_amountController.text) ?? 0.0;
+                            double amount =
+                                double.tryParse(_amountController.text) ?? 0.0;
                             _updateWallet(email, amount); // Update wallet
                           },
                           child: Text('Add Money'),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:iotapp/main.dart';
 import 'dart:convert';
+
+import 'package:iotapp/user.dart';
 
 class FuelUpdatePage extends StatefulWidget {
   @override
@@ -12,7 +15,7 @@ class _FuelUpdatePageState extends State<FuelUpdatePage> {
   TextEditingController dieselController = TextEditingController();
 
   Future<void> updateRates(double petrolRate, double dieselRate) async {
-    final url = Uri.parse('http://127.0.0.1:8000/petrol/update-rates/');
+    final url = Uri.parse('http://10.0.2.2:8000/petrol/update-rates/');
     final response = await http.put(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -20,18 +23,22 @@ class _FuelUpdatePageState extends State<FuelUpdatePage> {
     );
 
     if (response.statusCode == 200) {
-      // Handle success
-ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Successfull'),
-                              ),
-                            );    } else {
-      // Handle error
-ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Failed'),
-                              ),
-                            );    }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Successfully Updated Rates'),
+        ),
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to Update Rates'),
+        ),
+      );
+    }
   }
 
   @override
@@ -40,37 +47,77 @@ ScaffoldMessenger.of(context).showSnackBar(
       appBar: AppBar(
         title: Text('Fuel Update'),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: petrolController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Update Petrol',
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Container(
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                border: Border.all(
+                  color: Colors.grey,
+                  width: 1.0,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 20),
+                  Text(
+                    'Update Fuel',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 10),
+                  Icon(Icons.local_gas_station, size: 50),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: petrolController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Update Petrol',
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: dieselController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Update Diesel',
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      double petrolRate = double.parse(petrolController.text);
+                      double dieselRate = double.parse(dieselController.text);
+                      updateRates(petrolRate, dieselRate);
+                    },
+                    child: Text('Update'),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 20),
-            TextField(
-              controller: dieselController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Update Diesel',
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                double petrolRate = double.parse(petrolController.text);
-                double dieselRate = double.parse(dieselController.text);
-                updateRates(petrolRate, dieselRate);
-              },
-              child: Text('Update'),
-            ),
-          ],
+          ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_balance_wallet),
+            label: 'Wallet',
+          ),
+        ],
+        selectedItemColor: Colors.blue,
       ),
     );
   }

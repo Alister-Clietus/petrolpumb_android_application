@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:iotapp/main.dart';
 
 class SignupPage extends StatelessWidget {
-  const SignupPage({super.key});
+  const SignupPage({Key? key});
 
   Future<void> signUp(BuildContext context, String username, String email,
-      String password) async {
-    final url = Uri.parse('http://0.0.0.0:8000/auth/create/');
+      String password) async 
+    {
+    final url = Uri.parse('http://10.0.2.2:8000/auth/create/');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -25,19 +26,37 @@ class SignupPage extends StatelessWidget {
       }),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) 
+    {
       final jsonResponse = json.decode(response.body);
-      if (jsonResponse['id'] == 'success') {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Created account'),
+          ),
+        );
+      if (jsonResponse['message'] == "Userfound") 
+      {
         // Redirect to login page
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => LoginPage()),
         );
-      } else {
-        // Handle other cases, such as error responses
+      } else 
+      {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to create account'),
+          ),
+        );
       }
-    } else {
-      // Handle HTTP error
+    } 
+    else 
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to create account'),
+        ),
+      );
     }
   }
 
