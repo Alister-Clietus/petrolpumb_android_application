@@ -8,7 +8,6 @@ import 'package:iotapp/purchase_petrol_page.dart';
 import 'package:iotapp/update_rates.dart';
 import 'dart:convert';
 
-import 'package:iotapp/user.dart';
 import 'package:iotapp/wallet.dart';
 
 class HomePage extends StatelessWidget {

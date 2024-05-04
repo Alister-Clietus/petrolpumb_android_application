@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:iotapp/main.dart';
 import 'dart:convert';
 
-import 'package:iotapp/user.dart';
 
 class FuelUpdatePage extends StatefulWidget {
   @override

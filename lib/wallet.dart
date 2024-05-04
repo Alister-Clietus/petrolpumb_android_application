@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:iotapp/homepage.dart';
 import 'dart:convert';
 
 import 'package:iotapp/main.dart';
-import 'package:iotapp/user.dart';
-import 'package:provider/provider.dart';
 
 class WalletPage extends StatefulWidget {
 // Constructor with username parameter
