@@ -69,28 +69,31 @@ Widget build(BuildContext context) {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Text(
-                            //   'Profile Details:',
-                            //   style: TextStyle(
-                            //     fontSize: 20,
-                            //     fontWeight: FontWeight.bold,
-                            //   ),
-                            // ),
-                            const SizedBox(height: 10),
-                            Text('Name: ${userData['username']}'),
-                            Text('Email: ${userData['email']}'),
+                              const SizedBox(height: 10),
+                              Text(
+                                'Name: ${userData['username'].toUpperCase()}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'Email: ${userData['email'].toUpperCase()}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                           ],
                         ),
                       ),
-                      CircleAvatar(
-                        radius: 30,
+                      const CircleAvatar(
+                        radius: 20,
                         backgroundImage: NetworkImage(
                             'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg'),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 // Buttons row containers
                 // Total petrol bought container
                 Container(
@@ -188,7 +191,7 @@ Widget build(BuildContext context) {
     ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -207,7 +210,7 @@ Widget build(BuildContext context) {
                 style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
         ),
-        child: Text('Show Dispensers'),
+        child: const Text('Show Dispensers'),
       ),
     ),
     Container(
@@ -219,7 +222,7 @@ Widget build(BuildContext context) {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PetrolDispenserPage()),
+            MaterialPageRoute(builder: (context) => PetrolDispenserPage(username: username,)),
           );
         },
                 style: ElevatedButton.styleFrom(
@@ -230,8 +233,8 @@ Widget build(BuildContext context) {
     ),
                     ],
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'Current Rates:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
@@ -249,7 +252,7 @@ Widget build(BuildContext context) {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -259,13 +262,13 @@ Widget build(BuildContext context) {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
+                        const Text(
                           'Purchase Fuel',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -278,7 +281,7 @@ Widget build(BuildContext context) {
                                           PurchasePetrolPage(username: username,)),
                                 );
                               },
-                              child: Text('Petrol'),
+                              child: const Text('Petrol'),
                             ),
                             ElevatedButton(
                               onPressed: () {
@@ -289,7 +292,7 @@ Widget build(BuildContext context) {
                                           PurchaseDieselPage(username: username,)),
                                 );
                               },
-                              child: Text('Diesel'),
+                              child: const Text('Diesel'),
                             ),
                             ElevatedButton(
                               onPressed: () {

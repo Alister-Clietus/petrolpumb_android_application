@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:iotapp/homepage.dart';
-import 'package:iotapp/main.dart';
 import 'dart:convert';
 
 
@@ -19,31 +18,40 @@ class _FuelUpdatePageState extends State<FuelUpdatePage> {
   TextEditingController dieselController = TextEditingController();
 
   Future<void> updateRates(double petrolRate, double dieselRate) async {
-          String username = widget.username; // Accessing username here
-    final url = Uri.parse('http://10.0.2.2:8000/petrol/update-rates/');
-    final response = await http.put(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'petrol_rate': petrolRate, 'diesel_rate': dieselRate}),
-    );
+    String username = widget.username; // Accessing username here
+    if (username.isNotEmpty)
+    {
+        final url = Uri.parse('http://10.0.2.2:8000/petrol/update-rates/');
+        final response = await http.put(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'petrol_rate': petrolRate, 'diesel_rate': dieselRate}),
+        );
 
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Successfully Updated Rates'),
-        ),
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(username: username,)),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to Update Rates'),
-        ),
-      );
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Successfully Updated Rates'),
+            ),
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage(username: username,)),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to Update Rates'),
+            ),
+          );
+        }
     }
+    else
+    {
+          ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content:Text('Username Failed to Fetch'),),);
+    }
+    
   }
 
   @override

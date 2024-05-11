@@ -3,9 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:iotapp/homepage.dart';
 import 'dart:convert';
 
-import 'package:iotapp/main.dart';
-
-class WalletPage extends StatefulWidget {
+class WalletPage extends StatefulWidget 
+{
   final String username; // Username passed to the widget
 // Constructor with username parameter
   WalletPage({required this.username});
@@ -29,35 +28,46 @@ class _WalletPageState extends State<WalletPage> {
     });
   }
 
-  Future<void> _updateWallet(String email, double amount) async {
-      String username = widget.username; // Accessing username here
-    final url = Uri.parse('http://10.0.2.2:8000/auth/update-wallet/');
-    final response = await http.put(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'wallet_amount': amount}),
-    );
+  Future<void> _updateWallet(String email, double amount) async 
+  {
+    String username = widget.username; // Accessing username here
+    if (username.isNotEmpty && email.isNotEmpty)
+    {
+        final url = Uri.parse('http://10.0.2.2:8000/auth/update-wallet/');
+        final response = await http.put(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'email': email, 'wallet_amount': amount}),
+        );
 
-    if (response.statusCode == 200) {
-      // Handle success
-      // final jsonResponse = jsonDecode(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Money Added To Wallet'),
-        ),
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(username: username)),
-      );
-    } else {
-      // Handle error
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed'),
-        ),
-      );
+        if (response.statusCode == 200) 
+        {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Money Added To Wallet'),
+            ),
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage(username: username)),
+          );
+        } 
+        else 
+        {
+          // Handle error
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed'),
+            ),
+          );
+        }
     }
+    else
+    {
+      ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content:Text('Username and Email are required'),),);
+    }
+
   }
 
   @override

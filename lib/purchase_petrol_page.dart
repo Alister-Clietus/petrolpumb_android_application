@@ -32,58 +32,71 @@ class _PurchasePetrolPageState extends State<PurchasePetrolPage> {
 
   Future<void> purchaseFuel(BuildContext context, int dispenserId,
       String fuelType, int liters) async {
-    String username = widget.username;
+     String username = widget.username;
+          if (dispenserId != null && liters != null && dispenserId != 0) 
+          {
+              final url = Uri.parse('http://10.0.2.2:8000/petrol/purchase-fuel/');
+              final Map<String, dynamic> requestBody = {
+                'username': username,
+                'dispenser_id': dispenserId,
+                'fuel_type': fuelType,
+                'litters': liters,
+              };
 
-    final url = Uri.parse('http://10.0.2.2:8000/petrol/purchase-fuel/');
-    final Map<String, dynamic> requestBody = {
-      'username': username,
-      'dispenser_id': dispenserId,
-      'fuel_type': fuelType,
-      'litters': liters,
-    };
+              final response = await http.post(
+                url,
+                headers: {'Content-Type': 'application/json'},
+                body: jsonEncode(requestBody),
+              );
 
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(requestBody),
-    );
+              if (response.statusCode == 201) 
+              {
+                final jsonResponse = json.decode(response.body);
+                if (jsonResponse['message'] == 'FuelPurchased') {
+                  // Show success message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Fuel purchased successfully'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage(username: username)),
+                );
+                }
+              } else if (response.statusCode == 400) {
+                final jsonResponse = json.decode(response.body);
+                if (jsonResponse.containsKey('error')) {
+                  // Show error message
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(jsonResponse['error']),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              } else {
+                // Handle other HTTP errors
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Failed to purchase fuel'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+          } 
+          else
+          {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Dipenser id and Liters are Empty'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
 
-    if (response.statusCode == 201) 
-    {
-      final jsonResponse = json.decode(response.body);
-      if (jsonResponse['message'] == 'FuelPurchased') {
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Fuel purchased successfully'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage(username: username)),
-      );
-      }
-    } else if (response.statusCode == 400) {
-      final jsonResponse = json.decode(response.body);
-      if (jsonResponse.containsKey('error')) {
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(jsonResponse['error']),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } else {
-      // Handle other HTTP errors
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to purchase fuel'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+    
   }
 
 @override
