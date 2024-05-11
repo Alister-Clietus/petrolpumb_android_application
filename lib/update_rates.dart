@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:iotapp/homepage.dart';
 import 'package:iotapp/main.dart';
 import 'dart:convert';
 
 
 class FuelUpdatePage extends StatefulWidget {
+    final String username; // Username passed to the widget
+    FuelUpdatePage({required this.username});
+
+
   @override
   _FuelUpdatePageState createState() => _FuelUpdatePageState();
 }
@@ -14,6 +19,7 @@ class _FuelUpdatePageState extends State<FuelUpdatePage> {
   TextEditingController dieselController = TextEditingController();
 
   Future<void> updateRates(double petrolRate, double dieselRate) async {
+          String username = widget.username; // Accessing username here
     final url = Uri.parse('http://10.0.2.2:8000/petrol/update-rates/');
     final response = await http.put(
       url,
@@ -29,7 +35,7 @@ class _FuelUpdatePageState extends State<FuelUpdatePage> {
       );
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => HomePage(username: username,)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -120,10 +126,4 @@ class _FuelUpdatePageState extends State<FuelUpdatePage> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: FuelUpdatePage(),
-  ));
 }

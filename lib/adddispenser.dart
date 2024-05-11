@@ -30,10 +30,15 @@ class _PetrolDispenserPageState extends State<PetrolDispenserPage> {
       }),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 201) 
+    {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Successful')),
       );
+      Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PetrolDispenserPage()),
+          );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Unsuccessful')),

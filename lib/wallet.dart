@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:iotapp/homepage.dart';
 import 'dart:convert';
 
 import 'package:iotapp/main.dart';
 
 class WalletPage extends StatefulWidget {
+  final String username; // Username passed to the widget
 // Constructor with username parameter
+  WalletPage({required this.username});
 
   @override
   _WalletPageState createState() => _WalletPageState();
 }
 
 class _WalletPageState extends State<WalletPage> {
-  double _walletBalance = 0.0;
   TextEditingController _amountController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   int _selectedIndex =
@@ -28,6 +30,7 @@ class _WalletPageState extends State<WalletPage> {
   }
 
   Future<void> _updateWallet(String email, double amount) async {
+      String username = widget.username; // Accessing username here
     final url = Uri.parse('http://10.0.2.2:8000/auth/update-wallet/');
     final response = await http.put(
       url,
@@ -37,7 +40,7 @@ class _WalletPageState extends State<WalletPage> {
 
     if (response.statusCode == 200) {
       // Handle success
-      final jsonResponse = jsonDecode(response.body);
+      // final jsonResponse = jsonDecode(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Money Added To Wallet'),
@@ -45,7 +48,7 @@ class _WalletPageState extends State<WalletPage> {
       );
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => HomePage(username: username)),
       );
     } else {
       // Handle error
@@ -159,8 +162,4 @@ class _WalletPageState extends State<WalletPage> {
   }
 }
 
-void main() {
-  runApp(MaterialApp(
-    home: WalletPage(),
-  ));
-}
+

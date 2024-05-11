@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class RechargePage extends StatefulWidget {
+  final String username; // Username passed to the widget
+
+  RechargePage({required this.username});
+
   @override
   _RechargePageState createState() => _RechargePageState();
 }

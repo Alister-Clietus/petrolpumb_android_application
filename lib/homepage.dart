@@ -35,69 +35,120 @@ class HomePage extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Create an instance of the User class
-
-    // Set the username using the setter method
-    return FutureBuilder<Map<String, dynamic>>(
-      future: fetchUserData(username),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: CircularProgressIndicator()); // or any loading indicator
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          final userData = snapshot.data!;
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Welcome, ${userData['username']}'),
-            ),
-            body: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Profile Details:',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Text('Name: ${userData['username']}'),
-                              Text('Email: ${userData['email']}'),
-                              Text(
-                                  'Total Petrol Bought: ${userData['petrol_purchased']} liters'),
-                              Text(
-                                  'Total Diesel Bought: ${userData['diesel_purchased']} liters'),
-                              Text(
-                                  'Wallet Balance: \$ ${userData['wallet_amount']}'),
-                            ],
-                          ),
-                        ),
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: NetworkImage(
-                              'https://banner2.cleanpng.com/20180329/zue/kisspng-computer-icons-user-profile-person-5abd85306ff7f7.0592226715223698404586.jpg'),
-                        ),
-                      ],
-                    ),
+Widget build(BuildContext context) {
+  return FutureBuilder<Map<String, dynamic>>(
+    future: fetchUserData(username),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else {
+        final userData = snapshot.data!;
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Welcome, ${userData['username']}'),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Profile details container
+                Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  SizedBox(height: 20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Text(
+                            //   'Profile Details:',
+                            //   style: TextStyle(
+                            //     fontSize: 20,
+                            //     fontWeight: FontWeight.bold,
+                            //   ),
+                            // ),
+                            const SizedBox(height: 10),
+                            Text('Name: ${userData['username']}'),
+                            Text('Email: ${userData['email']}'),
+                          ],
+                        ),
+                      ),
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: NetworkImage(
+                            'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg'),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 5),
+                // Buttons row containers
+                // Total petrol bought container
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'Total Petrol Bought: ${userData['petrol_purchased']} liters',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 5),
+                // Total diesel bought container
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'Total Diesel Bought: ${userData['diesel_purchased']} liters',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 5),
+                // Wallet amount container
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'Wallet Balance: \$ ${userData['wallet_amount']}',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
                   Row(
                     
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -126,7 +177,7 @@ class HomePage extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => WalletPage()),
+            MaterialPageRoute(builder: (context) => WalletPage(username: username,)),
           );
         },
         style: ElevatedButton.styleFrom(
@@ -224,7 +275,7 @@ class HomePage extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          PurchasePetrolPage()),
+                                          PurchasePetrolPage(username: username,)),
                                 );
                               },
                               child: Text('Petrol'),
@@ -235,7 +286,7 @@ class HomePage extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          PurchaseDieselPage()),
+                                          PurchaseDieselPage(username: username,)),
                                 );
                               },
                               child: Text('Diesel'),
@@ -245,7 +296,7 @@ class HomePage extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => FuelUpdatePage()),
+                                      builder: (context) => FuelUpdatePage(username: username,)),
                                 );
                               },
                               child: Text('Update Fuel'),
@@ -258,27 +309,28 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.map),
-                  label: 'Map',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.account_balance_wallet),
-                  label: 'Wallet',
-                ),
-              ],
-              selectedItemColor: Colors.blue,
-            ),
-          );
-        }
-      },
-    );
-  }
+          bottomNavigationBar: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.map),
+                label: 'Map',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.account_balance_wallet),
+                label: 'Wallet',
+              ),
+            ],
+            selectedItemColor: Colors.blue,
+          ),
+        );
+      }
+    },
+  );
+}
+
 }
 
