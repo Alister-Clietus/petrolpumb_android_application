@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:iotapp/homepage.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 
@@ -61,7 +62,8 @@ class _QRScanPageState extends State<QRScanPage> {
     });
   }
 
-  void _sendDataToAPI(String qrData) async {
+  void _sendDataToAPI(String qrData) async 
+  {
     String username = widget.username; // Accessing username here
     // Extracting data from QR code
     List<String> qrParts = qrData.split(':');
@@ -83,44 +85,50 @@ class _QRScanPageState extends State<QRScanPage> {
     );
 
     // Handling the response
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) 
+    {
       Map<String, dynamic> responseData = jsonDecode(response.body);
       String message = responseData['message'];
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Response'),
-            content: Text(message),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
+          showDialog
+          (
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Response'),
+                content: Text(message),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
           );
-        },
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('Failed to purchase fuel. Please try again.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
+      Navigator.push(context,MaterialPageRoute(builder: (context) => HomePage(username: username)),);
+    } 
+    else 
+    {
+            showDialog
+            (
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text('Failed to purchase fuel. Please try again.'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
     }
   }
 

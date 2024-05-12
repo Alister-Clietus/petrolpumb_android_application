@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:iotapp/homepage.dart';
 import 'package:iotapp/qrcode.dart';
+import 'package:iotapp/qrtrial.dart';
 
 class PurchasePetrolPage extends StatefulWidget {
   final String username; // Username passed to the widget
@@ -128,22 +129,29 @@ Widget build(BuildContext context) {
                       (
                         onPressed: () async 
                           {
-                            final result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => QRScannerScreen
-                                (
-                                  onScanCompleted: (uniqueID, amount) 
-                                  {
-                                    _dispenserId = int.tryParse(uniqueID) ?? 0;
-                                    _amount = int.tryParse(amount) ?? 0;
-                                    _fuelType = "petrol";
-                                    purchaseFuel(context, _dispenserId, _fuelType, _amount);
-                                    print('Unique ID: $uniqueID, Amount: $amount');
-                                  }, username: username, //onScanCompleted
-                                ),
-                              ),
-                            );
+                            Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        QRScanPage(username: username),
+                                  ),
+                                );
+                            // final result = await Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => QRScannerScreen
+                            //     (
+                            //       onScanCompleted: (uniqueID, amount) 
+                            //       {
+                            //         _dispenserId = int.tryParse(uniqueID) ?? 0;
+                            //         _amount = int.tryParse(amount) ?? 0;
+                            //         _fuelType = "petrol";
+                            //         purchaseFuel(context, _dispenserId, _fuelType, _amount);
+                            //         print('Unique ID: $uniqueID, Amount: $amount');
+                            //       }, username: username, //onScanCompleted
+                            //     ),
+                            //   ),
+                            // );
                           }, //Onpressed
                         child: Text('Scan QR Code'),
                       ),
@@ -223,7 +231,7 @@ Widget build(BuildContext context) {
                           purchaseFuel(context, _dispenserId, _fuelType, _amount);
                         },
                         icon: Icon(Icons.local_gas_station),
-                        label: Text('Purchase Diesel'),
+                        label: Text('Purchase Petrol'),
                       ),
                     ),
                   ],

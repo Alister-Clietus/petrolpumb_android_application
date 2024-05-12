@@ -233,7 +233,7 @@ class _PurchaseDieselPageState extends State<PurchaseDieselPage> {
                                 context, _dispenserId, _fuelType, _amount);
                           },
                           icon: Icon(Icons.local_gas_station),
-                          label: Text('Purchase Petrol'),
+                          label: Text('Purchase Diesel'),
                         ),
                       ),
                     ],
