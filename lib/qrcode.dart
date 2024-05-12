@@ -116,7 +116,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(jsonResponse['error']),
-              backgroundColor: Colors.red,
+              backgroundColor: const Color.fromARGB(255, 19, 13, 13),
             ),
           );
         }

@@ -89,46 +89,12 @@ class _QRScanPageState extends State<QRScanPage> {
     {
       Map<String, dynamic> responseData = jsonDecode(response.body);
       String message = responseData['message'];
-          showDialog
-          (
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Response'),
-                content: Text(message),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Fuel Purchased Successfull'),),);
       Navigator.push(context,MaterialPageRoute(builder: (context) => HomePage(username: username)),);
     } 
     else 
     {
-            showDialog
-            (
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Error'),
-                  content: Text('Failed to purchase fuel. Please try again.'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('OK'),
-                    ),
-                  ],
-                );
-              },
-            );
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed To Purchase Fuel'),),);
     }
   }
 
