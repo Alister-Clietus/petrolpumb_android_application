@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:iotapp/homepage.dart';
 import 'package:iotapp/signup.dart';
+import 'package:iotapp/user.dart';
 import 'package:provider/provider.dart'; // Add this import
 
 void main() {
@@ -86,27 +87,40 @@ class LoginPage extends StatelessWidget {
                           String username = usernameController.text;
                           String password = passwordController.text;
 
-                          if (username.isNotEmpty && password.isNotEmpty) {
-                            Map<String, String> data = {
-                              'username': username,
-                              'password': password,
-                            };
+                          if (username.isNotEmpty && password.isNotEmpty) 
+                          {
+                              Map<String, String> data = 
+                              {
+                                'username': username,
+                                'password': password,
+                              };
 
-                            var response = await http.post(
+                            var response = await http.post
+                            (
                               Uri.parse('http://10.0.2.2:8000/auth/login/'),
-                              headers: <String, String>{
-                                'Content-Type':
-                                    'application/json; charset=UTF-8',
+                              headers: <String, String>
+                              {
+                                'Content-Type':'application/json; charset=UTF-8',
                               },
                               body: jsonEncode(data),
                             );
 
-                            if (response.statusCode == 200) {
-                              Map<String, dynamic> responseData =
-                                  jsonDecode(response.body);
-                              if (responseData['message'] == 'successful') {
+                            if (response.statusCode == 200) 
+                            {
+                              Map<String, dynamic> responseData =jsonDecode(response.body);
+                              if (responseData['message'] == 'successful') 
+                              {
                                 Provider.of<UserState>(context, listen: false)
                                     .setUserName(username); // Set the username globally
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        UserPage(username: username),
+                                  ),
+                                );
+                              } else if(responseData['message'] == 'adminsuccessful')
+                              {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -114,21 +128,32 @@ class LoginPage extends StatelessWidget {
                                         HomePage(username: username),
                                   ),
                                 );
-                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Loginad As Admin'),
+                                  ),
+                                );
+                              }
+                              else
+                              {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text('Login Failed'),
                                   ),
                                 );
                               }
-                            } else {
+                            } 
+                            else 
+                            {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('Login Failed'),
                                 ),
                               );
                             }
-                          } else {
+                          } 
+                          else 
+                          {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content:

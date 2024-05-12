@@ -98,6 +98,7 @@ Widget build(BuildContext context) {
                 // Total petrol bought container
                 Container(
                   width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.only(top: 10), // Top margin
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
@@ -158,8 +159,9 @@ Widget build(BuildContext context) {
                     children: [
                       Container(
       decoration: BoxDecoration(
+        color: Color.fromARGB(255, 2, 52, 11), // Background color
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey),
+        border: Border.all(color: Color.fromARGB(255, 175, 13, 13)),
       ),
       child: ElevatedButton(
         onPressed: () {
@@ -173,8 +175,9 @@ Widget build(BuildContext context) {
     ),
     Container(
       decoration: BoxDecoration(
+        color: Color.fromARGB(255, 2, 52, 11), // Background color
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey),
+        border: Border.all(color: Color.fromARGB(255, 209, 11, 11)),
       ),
       child: ElevatedButton(
         onPressed: () {
@@ -197,8 +200,9 @@ Widget build(BuildContext context) {
                     children: [
                       Container(
       decoration: BoxDecoration(
+        color: Color.fromARGB(255, 2, 52, 11), // Background color
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.grey),
+        border: Border.all(color: const Color.fromARGB(255, 158, 4, 4)),
       ),
       child: ElevatedButton(
         onPressed: () {
@@ -215,6 +219,7 @@ Widget build(BuildContext context) {
     ),
     Container(
       decoration: BoxDecoration(
+        color: Color.fromARGB(255, 2, 52, 11), // Background color
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey),
       ),
