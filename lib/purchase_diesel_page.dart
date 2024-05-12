@@ -99,6 +99,7 @@ class _PurchaseDieselPageState extends State<PurchaseDieselPage> {
 
   @override
   Widget build(BuildContext context) {
+        String username = widget.username; // Accessing username here
     return Scaffold(
       appBar: AppBar(
         title: Text('Purchase Fuel'),
@@ -137,7 +138,7 @@ class _PurchaseDieselPageState extends State<PurchaseDieselPage> {
                                     _fuelType = "diesel";
                                     purchaseFuel(context, _dispenserId, _fuelType, _amount);
                                     print('Unique ID: $uniqueID, Amount: $amount');
-                                  }, //onScanCompleted
+                                  }, username: username, //onScanCompleted
                                 ),
                               ),
                             );
